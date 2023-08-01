@@ -33,16 +33,29 @@
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
-
-
-        <SearchBar Grid.Row="0"
-                   Placeholder="Search items..."
-                   SearchCommand="{Binding SearchCommand}"
-                   Text="{Binding SearchText}"
-                   TextColor="White"
-                   BackgroundColor="#3F51B5">
-
-        </SearchBar>
+        <Grid Grid.Row="0"
+              BackgroundColor="#3F51B5">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="50" />
+            </Grid.ColumnDefinitions>
+            <SearchBar Grid.Column="0"
+                       IsVisible="True"
+                       Placeholder="Search items..."
+                       SearchCommand="{Binding SearchCommand}"
+                       Text="{Binding SearchText}"
+                       TextColor="White"
+                       >
+            </SearchBar>
+            <Label Grid.Column="1"
+                   FontFamily="{StaticResource MaterialIcon}"
+                   Text="&#xe8b6;"
+                   VerticalOptions="FillAndExpand"
+                   HorizontalOptions="FillAndExpand"
+                   VerticalTextAlignment="Center"
+                   HorizontalTextAlignment="Center"
+                   FontSize="32"/>
+        </Grid>
 
         <Label Grid.Row="1"
                Text="{Binding NumberOfCallsToGetComicsAsync}" />
