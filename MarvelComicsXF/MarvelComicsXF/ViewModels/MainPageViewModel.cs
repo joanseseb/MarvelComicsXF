@@ -22,7 +22,7 @@ namespace MarvelComicsXF.ViewModels
             //this.PageDisappearingCommand = new Command(async () => await LoadCharactersAsync());
             this.RemainingItemsThresholdReachedCommand = new Command(async () => await LoadMoreComicsAsync(currentOffSet, SearchText));
             this.SearchCommand = new Command(async () => await SearchComicsByTitleAsync(SearchText));
-            this.ItemTappedCommand = new Command(() => ItemTappedCommandExecuted());
+            this.ItemTappedCommand = new Command<Comic>((selectedItem) => ItemTappedCommandExecuted(selectedItem));
 
         }
 
@@ -30,7 +30,7 @@ namespace MarvelComicsXF.ViewModels
         #region [ Commands ]
 
         public ICommand PageAppearingCommand { get; set; }
-        //public ICommand PageDisappearingCommand { get; set; }
+        public ICommand PageDisappearingCommand { get; set; }
         public ICommand RemainingItemsThresholdReachedCommand { get; set; }
         public ICommand SearchCommand { get; set; }
         public ICommand ItemTappedCommand { get; set; }
@@ -210,9 +210,17 @@ namespace MarvelComicsXF.ViewModels
 
         #region [ Navigation ]
 
-        public async void ItemTappedCommandExecuted()
+        public async void ItemTappedCommandExecuted(Comic selectedItem)
         {
-            await Application.Current.MainPage.Navigation.PushAsync(new ComicDetailPage());
+            if (selectedItem is null)
+            {
+                throw new ArgumentNullException(nameof(selectedItem));
+            }
+
+            await App.Current.MainPage.Navigation.PushAsync(new ComicDetailPage
+            {
+                BindingContext = new ComicDetailPageViewModel { SelectedComic = selectedItem }
+            });
         }
         #endregion
     }

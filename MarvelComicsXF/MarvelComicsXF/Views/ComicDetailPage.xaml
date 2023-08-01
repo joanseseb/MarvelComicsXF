@@ -1,12 +1,38 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:viewmodels="clr-namespace:MarvelComicsXF.ViewModels"
+             xmlns:models="clr-namespace:MarvelComicsXF.Models"
+             xmlns:xct="http://xamarin.com/schemas/2020/toolkit"
              x:Class="MarvelComicsXF.Views.ComicDetailPage">
+
+    <ContentPage.BindingContext>
+        <viewmodels:ComicDetailPageViewModel />
+    </ContentPage.BindingContext>
+
+
+    <ContentPage.Behaviors>
+        <xct:EventToCommandBehavior EventName="Appearing"
+                                    Command="{Binding PageAppearingCommand}" />
+        <xct:EventToCommandBehavior EventName="Disappearing"
+                                    Command="{Binding PageDisappearingCommand}" />
+    </ContentPage.Behaviors>
+
     <ContentPage.Content>
-        <StackLayout>
-            <Label Text="Welcome to Xamarin.Forms!"
-                VerticalOptions="CenterAndExpand" 
-                HorizontalOptions="CenterAndExpand" />
+        <StackLayout Margin="20">
+            <Label Text="{Binding SelectedComic.Id, StringFormat='Id: {0}'}" />
+            <Label Text="{Binding SelectedComic.DigitalId, StringFormat='DigitalId: {0}'}" />
+            <Label Text="{Binding SelectedComic.Title, StringFormat='Title: {0}'}" />
+            <Label Text="{Binding SelectedComic.IssueNumber, StringFormat='IssueNumber: {0}'}" />
+            <Label Text="{Binding SelectedComic.VariantDescription, StringFormat='VariantDescription: {0}'}" />
+            <Label Text="{Binding SelectedComic.Description, StringFormat='Description: {0}'}" />
+            <Label Text="{Binding SelectedComic.ISBN, StringFormat='ISBN: {0}'}" />
+            <Label Text="{Binding SelectedComic.UPC, StringFormat='UPC: {0}'}" />
+            <Label Text="{Binding SelectedComic.DiamondCode, StringFormat='DiamondCode: {0}'}" />
+            <Label Text="{Binding SelectedComic.EAN, StringFormat='EAN: {0}'}" />
+            <Label Text="{Binding SelectedComic.ISSN, StringFormat='ISSN: {0}'}" />
+            <Label Text="{Binding SelectedComic.Format, StringFormat='Format: {0}'}" />
+            <Label Text="{Binding SelectedComic.PageCount, StringFormat='PageCount: {0}'}" />
         </StackLayout>
     </ContentPage.Content>
 </ContentPage>
