@@ -1,5 +1,6 @@
 ﻿using MarvelComicsXF.Models;
 using MarvelComicsXF.Services;
+using MarvelComicsXF.Views;
 using System;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
@@ -21,6 +22,8 @@ namespace MarvelComicsXF.ViewModels
             //this.PageDisappearingCommand = new Command(async () => await LoadCharactersAsync());
             this.RemainingItemsThresholdReachedCommand = new Command(async () => await LoadMoreComicsAsync(currentOffSet, SearchText));
             this.SearchCommand = new Command(async () => await SearchComicsByTitleAsync(SearchText));
+            this.ItemTappedCommand = new Command(() => ItemTappedCommandExecuted());
+
         }
 
 
@@ -30,6 +33,7 @@ namespace MarvelComicsXF.ViewModels
         //public ICommand PageDisappearingCommand { get; set; }
         public ICommand RemainingItemsThresholdReachedCommand { get; set; }
         public ICommand SearchCommand { get; set; }
+        public ICommand ItemTappedCommand { get; set; }
 
 
         #endregion
@@ -203,5 +207,13 @@ namespace MarvelComicsXF.ViewModels
                 moreData = false;
             }
         }
+
+        #region [ Navigation ]
+
+        public async void ItemTappedCommandExecuted()
+        {
+            await Application.Current.MainPage.Navigation.PushAsync(new ComicDetailPage());
+        }
+        #endregion
     }
 }

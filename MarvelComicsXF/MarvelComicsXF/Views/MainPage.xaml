@@ -5,7 +5,8 @@
              xmlns:models="clr-namespace:MarvelComicsXF.Models"
              xmlns:xct="http://xamarin.com/schemas/2020/toolkit"
              xmlns:converters="clr-namespace:MarvelComicsXF.Converters"
-             x:Class="MarvelComicsXF.Views.MainPage">
+             x:Class="MarvelComicsXF.Views.MainPage"
+             NavigationPage.HasNavigationBar="False">
 
     <ContentPage.BindingContext>
         <viewmodels:MainPageViewModel />
@@ -27,7 +28,7 @@
 
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
+            <RowDefinition Height="50" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
@@ -37,22 +38,25 @@
         <SearchBar Grid.Row="0"
                    Placeholder="Search items..."
                    SearchCommand="{Binding SearchCommand}"
-                   Text="{Binding SearchText}">
-            
+                   Text="{Binding SearchText}"
+                   TextColor="White"
+                   BackgroundColor="#3F51B5">
+
         </SearchBar>
 
         <Label Grid.Row="1"
                Text="{Binding NumberOfCallsToGetComicsAsync}" />
 
         <CollectionView Grid.Row="2"
-                        x:Name="CollectionView"
+                        x:Name="CollectionViewComics"
                         AutomationId="CollectionView"
                         ItemsSource="{Binding ListOfComics}"
                         ItemSizingStrategy="MeasureAllItems"
                         RemainingItemsThreshold="5"
-                        RemainingItemsThresholdReachedCommand="{Binding RemainingItemsThresholdReachedCommand}">
+                        RemainingItemsThresholdReachedCommand="{Binding RemainingItemsThresholdReachedCommand}"
+                        SelectionMode="None">
             <CollectionView.ItemTemplate>
-                <DataTemplate x:DataType="models:Comic">
+                <DataTemplate>
                     <Frame Padding="1"
                            Margin="0"
                            BorderColor="LightGray">
@@ -64,7 +68,7 @@
                                 <ColumnDefinition Width="Auto" />
                             </Grid.ColumnDefinitions>
                             <Label Grid.Column="0"
-                                   Text="{Binding ., Converter={StaticResource IndexConverter}, ConverterParameter={Binding Source={x:Reference CollectionView}, Path=BindingContext}}" />
+                                   Text="{Binding ., Converter={StaticResource IndexConverter}, ConverterParameter={Binding Source={x:Reference CollectionViewComics}, Path=BindingContext}}" />
                             <Image Grid.Column="1"
                                    VerticalOptions="Center"
                                    HorizontalOptions="Center"
@@ -88,6 +92,10 @@
                                        MaxLines="1" />
                             </Grid>
                         </Grid>
+                        <Frame.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding BindingContext.ItemTappedCommand, Source={x:Reference CollectionViewComics}}"
+                                                  CommandParameter="{Binding .}" />
+                        </Frame.GestureRecognizers>
                     </Frame>
                 </DataTemplate>
             </CollectionView.ItemTemplate>
