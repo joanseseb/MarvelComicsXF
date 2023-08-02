@@ -23,6 +23,7 @@ namespace MarvelComicsXF.ViewModels
             this.RemainingItemsThresholdReachedCommand = new Command(async () => await LoadMoreComicsAsync(currentOffSet, SearchText));
             this.SearchCommand = new Command(async () => await SearchComicsByTitleAsync(SearchText));
             this.ItemTappedCommand = new Command<Comic>((selectedItem) => ItemTappedCommandExecuted(selectedItem));
+            this.RefreshCommand = new Command(async async => await RefreshDataAsync());
 
         }
 
@@ -31,10 +32,10 @@ namespace MarvelComicsXF.ViewModels
 
         public ICommand PageAppearingCommand { get; set; }
         public ICommand PageDisappearingCommand { get; set; }
+        public ICommand RefreshCommand { get; set; }
         public ICommand RemainingItemsThresholdReachedCommand { get; set; }
         public ICommand SearchCommand { get; set; }
         public ICommand ItemTappedCommand { get; set; }
-
 
         #endregion
 
@@ -83,8 +84,7 @@ namespace MarvelComicsXF.ViewModels
 
 
         #endregion
-
-        public async Task LoadComicsAsync()
+        public async Task RefreshDataAsync()
         {
             try
             {
@@ -93,6 +93,8 @@ namespace MarvelComicsXF.ViewModels
 
                 IsBusy = true;
 
+                ListOfComics = new ObservableCollection<Comic>();
+                this.SearchText = string.Empty;
                 var apiService = new MarvelApiService();
                 var result = await apiService.GetComicsAsync();
                 foreach (var item in result.Results)
@@ -104,13 +106,40 @@ namespace MarvelComicsXF.ViewModels
                 CheckIfMoreData(result);
 
                 IsBusy = false;
+                IsRefreshing = false;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
+        public async Task LoadComicsAsync()
+        {
+            try
+            {
+                if (IsBusy || !string.IsNullOrEmpty(SearchText))
+                    return;
+
+                IsBusy = true;
+
+                var apiService = new MarvelApiService();
+                var result = await apiService.GetComicsAsync();
+                foreach (var item in result.Results)
+                {
+                    ListOfComics.Add(item);
+                }
+                NumberOfCallsToGetComicsAsync += 1;
+                CheckIfMoreData(result);
+
+                IsBusy = false;
             }
             catch (Exception ex)
             {
                 throw ex;
             }
         }
-
         public async Task LoadMoreComicsAsync(int offset, string searchText)
         {
             try

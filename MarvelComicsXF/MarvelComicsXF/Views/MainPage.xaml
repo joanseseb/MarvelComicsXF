@@ -2,7 +2,6 @@
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:viewmodels="clr-namespace:MarvelComicsXF.ViewModels"
-             xmlns:models="clr-namespace:MarvelComicsXF.Models"
              xmlns:xct="http://xamarin.com/schemas/2020/toolkit"
              xmlns:converters="clr-namespace:MarvelComicsXF.Converters"
              xmlns:controls="clr-namespace:MarvelComicsXF.Controls"
@@ -92,59 +91,64 @@
         <Label Grid.Row="1"
                Text="{Binding NumberOfCallsToGetComicsAsync}" />
 
-        <CollectionView Grid.Row="2"
-                        x:Name="CollectionViewComics"
-                        AutomationId="CollectionView"
-                        ItemsSource="{Binding ListOfComics}"
-                        ItemSizingStrategy="MeasureAllItems"
-                        RemainingItemsThreshold="5"
-                        RemainingItemsThresholdReachedCommand="{Binding RemainingItemsThresholdReachedCommand}"
-                        SelectionMode="None">
-            <CollectionView.ItemTemplate>
-                <DataTemplate>
-                    <Frame Padding="1"
-                           Margin="0"
-                           BorderColor="LightGray">
-                        <Grid Padding="10"
-                              Margin="0">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="Auto" />
-                                <ColumnDefinition Width="Auto" />
-                                <ColumnDefinition Width="Auto" />
-                            </Grid.ColumnDefinitions>
-                            <Label Grid.Column="0"
-                                   Text="{Binding ., Converter={StaticResource IndexConverter}, ConverterParameter={Binding Source={x:Reference CollectionViewComics}, Path=BindingContext}}" />
-                            <Image Grid.Column="1"
-                                   VerticalOptions="Center"
-                                   HorizontalOptions="Center"
-                                   HeightRequest="64"
-                                   WidthRequest="64"
-                                   Source="{Binding Thumbnail, Converter={StaticResource ThumbnailToImageSourceConverter}}">
-                                <Image.Clip>
-                                    <EllipseGeometry Center="32,32"
-                                                     RadiusX="32"
-                                                     RadiusY="32" />
-                                </Image.Clip>
-                            </Image>
-                            <Grid Grid.Column="2">
-                                <Label Grid.Row="0"
-                                       TextColor="Black"
+        <RefreshView Grid.Row="2"
+                     IsRefreshing="{Binding IsRefreshing}"
+                     Command="{Binding RefreshCommand}">
+
+            <CollectionView x:Name="CollectionViewComics"
+                            AutomationId="CollectionView"
+                            ItemsSource="{Binding ListOfComics}"
+                            ItemSizingStrategy="MeasureAllItems"
+                            RemainingItemsThreshold="5"
+                            RemainingItemsThresholdReachedCommand="{Binding RemainingItemsThresholdReachedCommand}"
+                            SelectionMode="None">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <Frame Padding="1"
+                               Margin="0"
+                               BorderColor="LightGray">
+                            <Grid Padding="10"
+                                  Margin="0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+                                <Label Grid.Column="0"
+                                       Text="{Binding ., Converter={StaticResource IndexConverter}, ConverterParameter={Binding Source={x:Reference CollectionViewComics}, Path=BindingContext}}" />
+                                <Image Grid.Column="1"
                                        VerticalOptions="Center"
-                                       Text="{Binding Title}" />
-                                <Label Grid.Row="1"
-                                       VerticalOptions="Center"
-                                       Text="{Binding Description}"
-                                       MaxLines="1" />
+                                       HorizontalOptions="Center"
+                                       HeightRequest="64"
+                                       WidthRequest="64"
+                                       Source="{Binding Thumbnail, Converter={StaticResource ThumbnailToImageSourceConverter}}">
+                                    <Image.Clip>
+                                        <EllipseGeometry Center="32,32"
+                                                         RadiusX="32"
+                                                         RadiusY="32" />
+                                    </Image.Clip>
+                                </Image>
+                                <Grid Grid.Column="2">
+                                    <Label Grid.Row="0"
+                                           TextColor="Black"
+                                           VerticalOptions="Center"
+                                           Text="{Binding Title}" />
+                                    <Label Grid.Row="1"
+                                           VerticalOptions="Center"
+                                           Text="{Binding Description}"
+                                           MaxLines="1" />
+                                </Grid>
                             </Grid>
-                        </Grid>
-                        <Frame.GestureRecognizers>
-                            <TapGestureRecognizer Command="{Binding BindingContext.ItemTappedCommand, Source={x:Reference CollectionViewComics}}"
-                                                  CommandParameter="{Binding .}" />
-                        </Frame.GestureRecognizers>
-                    </Frame>
-                </DataTemplate>
-            </CollectionView.ItemTemplate>
-        </CollectionView>
+                            <Frame.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding BindingContext.ItemTappedCommand, Source={x:Reference CollectionViewComics}}"
+                                                      CommandParameter="{Binding .}" />
+                            </Frame.GestureRecognizers>
+                        </Frame>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+        </RefreshView>
+
     </Grid>
 
 </ContentPage>
