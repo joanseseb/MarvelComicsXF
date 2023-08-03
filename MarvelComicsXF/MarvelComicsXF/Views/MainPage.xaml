@@ -20,7 +20,7 @@
 
     <ContentPage.Resources>
         <ResourceDictionary>
-            
+
         </ResourceDictionary>
     </ContentPage.Resources>
 
@@ -99,27 +99,27 @@
                             RemainingItemsThreshold="5"
                             RemainingItemsThresholdReachedCommand="{Binding RemainingItemsThresholdReachedCommand}"
                             EmptyView=""
-                            SelectionMode="None">
+                            SelectionMode="None"
+                            IsVisible="{Binding IsBusy, Converter={xct:InvertedBoolConverter}}">
                 <CollectionView.ItemTemplate>
                     <DataTemplate>
                         <Frame Padding="1"
                                Margin="0"
                                BorderColor="LightGray"
-                               HeightRequest="100">
+                               HeightRequest="110">
                             <Grid Padding="10"
                                   Margin="0">
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="30" />
-                                    <ColumnDefinition Width="100" />
+                                    <ColumnDefinition Width="54" />
                                     <ColumnDefinition Width="Auto" />
                                 </Grid.ColumnDefinitions>
                                 <Label Grid.Column="0"
-                                       Text="{Binding ., StringFormat='#{0}', Converter={StaticResource IndexConverter}, ConverterParameter={Binding Source={x:Reference CollectionViewComics}, Path=BindingContext}}" />
+                                       Text="{Binding ., StringFormat='#{0}', Converter={StaticResource IndexConverter}, ConverterParameter={Binding Source={x:Reference CollectionViewComics}, Path=BindingContext}}"
+                                       VerticalOptions="Center" />
                                 <Image Grid.Column="1"
                                        VerticalOptions="Center"
                                        HorizontalOptions="Center"
-                                       HeightRequest="64"
-                                       WidthRequest="64"
                                        Source="{Binding Thumbnail, Converter={StaticResource ThumbnailToImageSourceConverter}}">
                                     <!--<Image.Clip>
                                         <EllipseGeometry Center="32,32"
@@ -127,16 +127,16 @@
                                                          RadiusY="32" />
                                     </Image.Clip>-->
                                 </Image>
-                                <Grid Grid.Column="2">
-                                    <Label Grid.Row="0"
-                                           TextColor="Black"
+                                <StackLayout Grid.Column="2"
+                                             Margin="8,0">
+                                    <Label TextColor="Black"
                                            VerticalOptions="Center"
                                            Text="{Binding Title}" />
-                                    <Label Grid.Row="1"
-                                           VerticalOptions="Center"
+                                    <Label VerticalOptions="Center"
                                            Text="{Binding Description}"
-                                           MaxLines="1" />
-                                </Grid>
+                                           LineBreakMode="TailTruncation"
+                                           MaxLines="3"  />
+                                </StackLayout>
                             </Grid>
                             <Frame.GestureRecognizers>
                                 <TapGestureRecognizer Command="{Binding BindingContext.ItemTappedCommand, Source={x:Reference CollectionViewComics}}"
@@ -147,22 +147,25 @@
                 </CollectionView.ItemTemplate>
                 <CollectionView.EmptyViewTemplate>
                     <DataTemplate>
-                        <StackLayout HeightRequest="300" >
+                        <StackLayout HeightRequest="300">
                             <Label Text="&#xea76;"
                                    FontFamily="{StaticResource MaterialIcon}"
-                                   TextColor="{StaticResource secondaryTextColor}" 
+                                   TextColor="{StaticResource secondaryTextColor}"
                                    FontSize="128"
-                                   HorizontalOptions="Center"/>
+                                   HorizontalOptions="Center" />
                             <Label Text="Does not match any result!"
                                    TextColor="{StaticResource secondaryTextColor}"
                                    FontSize="18"
                                    HorizontalOptions="Center" />
-                            <Button Text="Search again" HorizontalOptions="Center"
+                            <Button Text="Search again"
+                                    HorizontalOptions="Center"
                                     Margin="20"
                                     Padding="30,0"
                                     Pressed="SearchAgainTapped"
                                     Command="{Binding BindingContext.RestartSearchCommand, Source={x:Reference CollectionViewComics}}"
-                                    TextColor="{StaticResource primaryTextColor}" BackgroundColor="{StaticResource primaryColor}" CornerRadius="20"/>
+                                    TextColor="{StaticResource primaryTextColor}"
+                                    BackgroundColor="{StaticResource primaryColor}"
+                                    CornerRadius="20" />
                         </StackLayout>
                     </DataTemplate>
                 </CollectionView.EmptyViewTemplate>

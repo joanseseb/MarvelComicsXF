@@ -124,7 +124,7 @@ namespace MarvelComicsXF.ViewModels
             {
                 if (IsBusy || !string.IsNullOrEmpty(SearchText))
                     return;
-
+                IsRefreshing = true;
                 IsBusy = true;
 
                 var apiService = new MarvelApiService();
@@ -135,6 +135,7 @@ namespace MarvelComicsXF.ViewModels
                 NumberOfCallsToGetComicsAsync += 1;
                 CheckIfMoreData(result);
 
+                IsRefreshing = false;
                 IsBusy = false;
             }
             catch (Exception ex)
