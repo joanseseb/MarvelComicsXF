@@ -17,21 +17,151 @@
                                     Command="{Binding PageDisappearingCommand}" />
     </ContentPage.Behaviors>
 
+    <NavigationPage.TitleView>
+        <Label Text="{Binding SelectedComic.Title}"
+               TextColor="{StaticResource primaryTextColor}"
+               FontSize="18" />
+    </NavigationPage.TitleView>
+
     <ContentPage.Content>
-        <StackLayout Margin="20">
-            <Label Text="{Binding SelectedComic.Id, StringFormat='Id: {0}'}" />
-            <Label Text="{Binding SelectedComic.DigitalId, StringFormat='DigitalId: {0}'}" />
-            <Label Text="{Binding SelectedComic.Title, StringFormat='Title: {0}'}" />
-            <Label Text="{Binding SelectedComic.IssueNumber, StringFormat='IssueNumber: {0}'}" />
-            <Label Text="{Binding SelectedComic.VariantDescription, StringFormat='VariantDescription: {0}'}" />
-            <Label Text="{Binding SelectedComic.Description, StringFormat='Description: {0}'}" />
-            <Label Text="{Binding SelectedComic.ISBN, StringFormat='ISBN: {0}'}" />
-            <Label Text="{Binding SelectedComic.UPC, StringFormat='UPC: {0}'}" />
-            <Label Text="{Binding SelectedComic.DiamondCode, StringFormat='DiamondCode: {0}'}" />
-            <Label Text="{Binding SelectedComic.EAN, StringFormat='EAN: {0}'}" />
-            <Label Text="{Binding SelectedComic.ISSN, StringFormat='ISSN: {0}'}" />
-            <Label Text="{Binding SelectedComic.Format, StringFormat='Format: {0}'}" />
-            <Label Text="{Binding SelectedComic.PageCount, StringFormat='PageCount: {0}'}" />
-        </StackLayout>
+        <ScrollView>
+            <Grid RowSpacing="0">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <Frame Grid.Row="0"
+                       BackgroundColor="{StaticResource primaryColor}"
+                       BorderColor="Black"
+                       CornerRadius="0"
+                       Margin="0"
+                       Padding="1"
+                       HeightRequest="30">
+                    <Label Text="General information"
+                           TextColor="{StaticResource primaryTextColor}"
+                           VerticalOptions="Center"
+                           Padding="20,0" />
+                </Frame>
+                <Grid Grid.Row="1"
+                      Margin="10,10,10,-10"
+                      ColumnSpacing="10">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width=" 50*" />
+                        <ColumnDefinition Width=" 50*" />
+                    </Grid.ColumnDefinitions>
+
+                    <Image Grid.Column="0"
+                           VerticalOptions="Start"
+                           HorizontalOptions="Center"
+                           Source="{Binding SelectedComic.Thumbnail, Converter={StaticResource ThumbnailToImageSourceConverter}}">
+                    </Image>
+                    <Grid Grid.Column="1"
+                          Padding="0">
+                        <StackLayout>
+                            <Label Text="{Binding SelectedComic.Id, StringFormat='Id: {0}'}" />
+                            <Label Text="{Binding SelectedComic.DigitalId, StringFormat='DigitalId: {0}'}" />
+                            <Label Text="{Binding SelectedComic.IssueNumber, StringFormat='IssueNumber: {0}'}" />
+                            <Label Text="{Binding SelectedComic.VariantDescription, StringFormat='VariantDescription: {0}'}" />
+                            <Label Text="{Binding SelectedComic.ISBN, StringFormat='ISBN: {0}'}" />
+                            <Label Text="{Binding SelectedComic.UPC, StringFormat='UPC: {0}'}" />
+                            <Label Text="{Binding SelectedComic.DiamondCode, StringFormat='DiamondCode: {0}'}" />
+                            <Label Text="{Binding SelectedComic.EAN, StringFormat='EAN: {0}'}" />
+                            <Label Text="{Binding SelectedComic.ISSN, StringFormat='ISSN: {0}'}" />
+                            <Label Text="{Binding SelectedComic.PageCount, StringFormat='PageCount: {0}'}" />
+                        </StackLayout>
+                    </Grid>
+                </Grid>
+
+                <Label Grid.Row="2"
+                       Margin="10,0,10,10"
+                       Text="{Binding SelectedComic.Description}"
+                       IsVisible="{Binding SelectedComic.Description, Converter={xct:IsNotNullOrEmptyConverter}}" />
+
+                <Frame Grid.Row="3"
+                       BackgroundColor="{StaticResource primaryColor}"
+                       BorderColor="Black"
+                       IsVisible="{Binding ListOfCharacters, Converter={xct:ListIsNotNullOrEmptyConverter}}"
+                       CornerRadius="0"
+                       Margin="0"
+                       Padding="1"
+                       HeightRequest="30">
+                    <Label Text="Characters"
+                           TextColor="{StaticResource primaryTextColor}"
+                           VerticalOptions="Center"
+                           Padding="20,0" />
+                </Frame>
+                <CarouselView Grid.Row="4"
+                              x:Name="CharacterCarouselView"
+                              Margin="10"
+                              ItemsSource="{Binding ListOfCharacters}"
+                              IsVisible="{Binding ListOfCharacters, Converter={xct:ListIsNotNullOrEmptyConverter}}"
+                              BackgroundColor="Transparent"
+                              Loop="True"
+                              Scrolled="CharacterCarouselView_Scrolled"
+                              HeightRequest="200"
+                              PositionChanged="CharacterCarouselView_PositionChanged">
+                    <CarouselView.ItemTemplate>
+                        <DataTemplate>
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="*" />
+                                    <RowDefinition Height="Auto" />
+                                </Grid.RowDefinitions>
+                                <Image Grid.Row="0"
+                                       Source="{Binding Thumbnail, Converter={StaticResource ThumbnailToImageSourceConverter}}"
+                                       Aspect="AspectFill"
+                                       VerticalOptions="Center"
+                                       HorizontalOptions="Center" />
+                                <Label Grid.Row="1"
+                                       Text="{Binding Name}"
+                                       TextColor="{StaticResource secondaryTextColor}"
+                                       HorizontalOptions="Center"
+                                       VerticalOptions="Center" />
+                            </Grid>
+                        </DataTemplate>
+                    </CarouselView.ItemTemplate>
+                </CarouselView>
+
+                <Frame Grid.Row="5"
+                       BackgroundColor="{StaticResource primaryColor}"
+                       BorderColor="Black"
+                       IsVisible="{Binding SelectedComic.Creators.Items, Converter={xct:ListIsNotNullOrEmptyConverter}}"
+                       CornerRadius="0"
+                       Margin="0"
+                       Padding="1"
+                       HeightRequest="30">
+                    <Label Text="Creators"
+                           TextColor="{StaticResource primaryTextColor}"
+                           VerticalOptions="Center"
+                           Padding="20,0" />
+                </Frame>
+
+                <FlexLayout Grid.Row="6"
+                            x:Name="CreatorsListView"
+                            Margin="10"
+                            IsVisible="{Binding SelectedComic.Creators.Items, Converter={xct:ListIsNotNullOrEmptyConverter}}"
+                            BindableLayout.ItemsSource="{Binding SelectedComic.Creators.Items}"
+                            Wrap="Wrap"
+                            AlignContent="SpaceEvenly"
+                            AlignItems="Start"
+                            JustifyContent="SpaceEvenly">
+                    <BindableLayout.ItemTemplate>
+                        <DataTemplate>
+                            <StackLayout Margin="10"
+                                         WidthRequest="150"
+                                         Spacing="0">
+                                <Label Text="{Binding Name}"
+                                       FontAttributes="Bold" />
+                                <Label Text="{Binding Role}" />
+                            </StackLayout>
+                        </DataTemplate>
+                    </BindableLayout.ItemTemplate>
+                </FlexLayout>
+            </Grid>
+        </ScrollView>
     </ContentPage.Content>
 </ContentPage>

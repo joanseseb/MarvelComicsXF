@@ -1,6 +1,5 @@
 ﻿using Newtonsoft.Json;
 using System;
-using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
 using MarvelComicsXF.Models;
@@ -20,6 +19,26 @@ namespace MarvelComicsXF.Services
             httpClient = new HttpClient();
         }
 
+        #region [ Md5Hash ]
+        private static string CalculateMd5Hash(string input)
+        {
+            using (var md5 = System.Security.Cryptography.MD5.Create())
+            {
+                byte[] inputBytes = System.Text.Encoding.ASCII.GetBytes(input);
+                byte[] hashBytes = md5.ComputeHash(inputBytes);
+
+                var stringBuilder = new System.Text.StringBuilder();
+                for (int i = 0; i < hashBytes.Length; i++)
+                {
+                    stringBuilder.Append(hashBytes[i].ToString("x2"));
+                }
+                return stringBuilder.ToString();
+            }
+        }
+
+
+        #endregion
+
         public async Task<ComicDataContainer> GetComicsAsync()
         {
             var timestamp = DateTime.Now.Ticks.ToString();
@@ -32,7 +51,7 @@ namespace MarvelComicsXF.Services
             {
                 var content = await response.Content.ReadAsStringAsync();
 
-                var result = JsonConvert.DeserializeObject<MarvelApiResponse>(content);
+                var result = JsonConvert.DeserializeObject<MarvelComicApiResponse>(content);
                 return result.Data;
             }
 
@@ -51,7 +70,7 @@ namespace MarvelComicsXF.Services
             {
                 var content = await response.Content.ReadAsStringAsync();
 
-                var result = JsonConvert.DeserializeObject<MarvelApiResponse>(content);
+                var result = JsonConvert.DeserializeObject<MarvelComicApiResponse>(content);
                 return result.Data;
             }
 
@@ -71,7 +90,7 @@ namespace MarvelComicsXF.Services
             {
                 var content = await response.Content.ReadAsStringAsync();
 
-                var result = JsonConvert.DeserializeObject<MarvelApiResponse>(content);
+                var result = JsonConvert.DeserializeObject<MarvelComicApiResponse>(content);
                 return result.Data;
             }
 
@@ -91,38 +110,44 @@ namespace MarvelComicsXF.Services
             {
                 var content = await response.Content.ReadAsStringAsync();
 
-                var result = JsonConvert.DeserializeObject<MarvelApiResponse>(content);
+                var result = JsonConvert.DeserializeObject<MarvelComicApiResponse>(content);
                 return result.Data;
             }
 
             return null;
         }
 
-        #region [ Md5Hash ]
-        private static string CalculateMd5Hash(string input)
+        public async Task<CharacterDataContainer> GetCharactersAsync(string url)
         {
-            using (var md5 = System.Security.Cryptography.MD5.Create())
-            {
-                byte[] inputBytes = System.Text.Encoding.ASCII.GetBytes(input);
-                byte[] hashBytes = md5.ComputeHash(inputBytes);
+            var timestamp = DateTime.Now.Ticks.ToString();
+            var hash = CalculateMd5Hash(timestamp + PrivateKey + PublicKey);
 
-                var stringBuilder = new System.Text.StringBuilder();
-                for (int i = 0; i < hashBytes.Length; i++)
-                {
-                    stringBuilder.Append(hashBytes[i].ToString("x2"));
-                }
-                return stringBuilder.ToString();
+            var httpsurl = "https" + url.Substring(4);
+            var apiUrl = $"{httpsurl}?apikey={PublicKey}&ts={timestamp}&hash={hash}";
+
+            var response = await httpClient.GetAsync(apiUrl);
+            if (response.IsSuccessStatusCode)
+            {
+                var content = await response.Content.ReadAsStringAsync();
+
+                var result = JsonConvert.DeserializeObject<MarvelCharacterApiResponse>(content);
+                return result.Data;
             }
+
+            return null;
         }
-        #endregion
     }
 
-    public class MarvelApiResponse
+    public class MarvelComicApiResponse
     {
         public ComicDataContainer Data { get; set; }
     }
+    public class MarvelCharacterApiResponse
+    {
+        public CharacterDataContainer Data { get; set; }
+    }
 
-    
+
 }
 
 

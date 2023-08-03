@@ -3,7 +3,6 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:viewmodels="clr-namespace:MarvelComicsXF.ViewModels"
              xmlns:xct="http://xamarin.com/schemas/2020/toolkit"
-             xmlns:converters="clr-namespace:MarvelComicsXF.Converters"
              xmlns:controls="clr-namespace:MarvelComicsXF.Controls"
              x:Class="MarvelComicsXF.Views.MainPage"
              NavigationPage.HasNavigationBar="False">
@@ -21,8 +20,7 @@
 
     <ContentPage.Resources>
         <ResourceDictionary>
-            <converters:ThumbnailToImageSourceConverter x:Key="ThumbnailToImageSourceConverter" />
-            <converters:IndexValueConverter x:Key="IndexConverter" />
+            
         </ResourceDictionary>
     </ContentPage.Resources>
 
@@ -34,7 +32,7 @@
         </Grid.RowDefinitions>
 
         <Grid Grid.Row="0"
-              BackgroundColor="#3F51B5">
+              BackgroundColor="{StaticResource primaryColor}">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="50" />
                 <ColumnDefinition Width="*" />
@@ -46,7 +44,7 @@
                    IsVisible="False"
                    FontFamily="{StaticResource MaterialIcon}"
                    Text="&#xe5c4;"
-                   TextColor="White"
+                   TextColor="{StaticResource primaryTextColor}"
                    VerticalOptions="FillAndExpand"
                    HorizontalOptions="FillAndExpand"
                    VerticalTextAlignment="Center"
@@ -54,7 +52,6 @@
                    FontSize="32">
                 <Label.GestureRecognizers>
                     <TapGestureRecognizer Tapped="SearchIcon_Tapped" />
-
                 </Label.GestureRecognizers>
             </Label>
 
@@ -66,17 +63,17 @@
                                       Placeholder="Search items..."
                                       SearchCommand="{Binding SearchCommand}"
                                       Text="{Binding SearchText}"
-                                      BackgroundColor="#303F9F"
-                                      TextColor="White"
-                                      PlaceholderColor="White"
-                                      CancelButtonColor="White">
+                                      BackgroundColor="{StaticResource secondaryColor}"
+                                      TextColor="{StaticResource primaryTextColor}"
+                                      PlaceholderColor="{StaticResource primaryTextColor}"
+                                      CancelButtonColor="{StaticResource primaryTextColor}">
             </controls:CustomSearchBar>
 
             <Label Grid.Column="2"
                    x:Name="SearchIcon"
                    FontFamily="{StaticResource MaterialIcon}"
                    Text="&#xe8b6;"
-                   TextColor="White"
+                   TextColor="{StaticResource primaryTextColor}"
                    VerticalOptions="FillAndExpand"
                    HorizontalOptions="FillAndExpand"
                    VerticalTextAlignment="Center"
@@ -98,35 +95,37 @@
             <CollectionView x:Name="CollectionViewComics"
                             AutomationId="CollectionView"
                             ItemsSource="{Binding ListOfComics}"
-                            ItemSizingStrategy="MeasureAllItems"
+                            ItemSizingStrategy="MeasureFirstItem"
                             RemainingItemsThreshold="5"
                             RemainingItemsThresholdReachedCommand="{Binding RemainingItemsThresholdReachedCommand}"
+                            EmptyView=""
                             SelectionMode="None">
                 <CollectionView.ItemTemplate>
                     <DataTemplate>
                         <Frame Padding="1"
                                Margin="0"
-                               BorderColor="LightGray">
+                               BorderColor="LightGray"
+                               HeightRequest="100">
                             <Grid Padding="10"
                                   Margin="0">
                                 <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="Auto" />
-                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="30" />
+                                    <ColumnDefinition Width="100" />
                                     <ColumnDefinition Width="Auto" />
                                 </Grid.ColumnDefinitions>
                                 <Label Grid.Column="0"
-                                       Text="{Binding ., Converter={StaticResource IndexConverter}, ConverterParameter={Binding Source={x:Reference CollectionViewComics}, Path=BindingContext}}" />
+                                       Text="{Binding ., StringFormat='#{0}', Converter={StaticResource IndexConverter}, ConverterParameter={Binding Source={x:Reference CollectionViewComics}, Path=BindingContext}}" />
                                 <Image Grid.Column="1"
                                        VerticalOptions="Center"
                                        HorizontalOptions="Center"
                                        HeightRequest="64"
                                        WidthRequest="64"
                                        Source="{Binding Thumbnail, Converter={StaticResource ThumbnailToImageSourceConverter}}">
-                                    <Image.Clip>
+                                    <!--<Image.Clip>
                                         <EllipseGeometry Center="32,32"
                                                          RadiusX="32"
                                                          RadiusY="32" />
-                                    </Image.Clip>
+                                    </Image.Clip>-->
                                 </Image>
                                 <Grid Grid.Column="2">
                                     <Label Grid.Row="0"
@@ -146,6 +145,27 @@
                         </Frame>
                     </DataTemplate>
                 </CollectionView.ItemTemplate>
+                <CollectionView.EmptyViewTemplate>
+                    <DataTemplate>
+                        <StackLayout HeightRequest="300" >
+                            <Label Text="&#xea76;"
+                                   FontFamily="{StaticResource MaterialIcon}"
+                                   TextColor="{StaticResource secondaryTextColor}" 
+                                   FontSize="128"
+                                   HorizontalOptions="Center"/>
+                            <Label Text="Does not match any result!"
+                                   TextColor="{StaticResource secondaryTextColor}"
+                                   FontSize="18"
+                                   HorizontalOptions="Center" />
+                            <Button Text="Search again" HorizontalOptions="Center"
+                                    Margin="20"
+                                    Padding="30,0"
+                                    Pressed="SearchAgainTapped"
+                                    Command="{Binding BindingContext.RestartSearchCommand, Source={x:Reference CollectionViewComics}}"
+                                    TextColor="{StaticResource primaryTextColor}" BackgroundColor="{StaticResource primaryColor}" CornerRadius="20"/>
+                        </StackLayout>
+                    </DataTemplate>
+                </CollectionView.EmptyViewTemplate>
             </CollectionView>
         </RefreshView>
 

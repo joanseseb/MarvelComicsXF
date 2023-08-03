@@ -23,18 +23,17 @@ namespace MarvelComicsXF.Droid.Renderers
             base.OnElementChanged(e);
             var icon = Control?.FindViewById(Context.Resources.GetIdentifier("android:id/search_mag_icon", null, null));
             (icon as ImageView)?.SetImageDrawable(null);
-
-
         }
 
         protected override void OnElementPropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
             base.OnElementPropertyChanged(sender, e);
 
-            if (e.PropertyName == SearchBar.IsFocusedProperty.PropertyName && Control != null)
+            if ((e.PropertyName == SearchBar.IsFocusedProperty.PropertyName || e.PropertyName == SearchBar.TextProperty.PropertyName ) && Control != null)
             {
-                if (Element.IsFocused)
+                if (Element.IsFocused || string.IsNullOrEmpty(Element.Text))
                 {
+                    //Control.RequestFocus();
                     InputMethodManager imm = (InputMethodManager)Control.Context.GetSystemService(Context.InputMethodService);
                     imm.ShowSoftInput(Control, ShowFlags.Forced);
                     imm.ShowSoftInput(Control, ShowFlags.Implicit);

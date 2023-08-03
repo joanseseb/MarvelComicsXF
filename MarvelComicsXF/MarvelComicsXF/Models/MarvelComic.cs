@@ -1,12 +1,9 @@
 ﻿using Newtonsoft.Json;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Text;
 
 namespace MarvelComicsXF.Models
 {
-
     public class ComicDataWrapper
     {
         public int Code { get; set; }
@@ -68,24 +65,6 @@ namespace MarvelComicsXF.Models
         public string Text { get; set; }
     }
 
-    public class Url
-    {
-        public string Type { get; set; }
-        public string URL { get; set; }
-    }
-
-    public class SeriesSummary
-    {
-        public string ResourceURI { get; set; }
-        public string Name { get; set; }
-    }
-
-    public class ComicSummary
-    {
-        public string ResourceURI { get; set; }
-        public string Name { get; set; }
-    }
-
     public class ComicDate
     {
         public string Type { get; set; }
@@ -97,12 +76,6 @@ namespace MarvelComicsXF.Models
     {
         public string Type { get; set; }
         public float Price { get; set; }
-    }
-
-    public class Image
-    {
-        public string Path { get; set; }
-        public string Extension { get; set; }
     }
 
     public class CreatorList
@@ -134,34 +107,52 @@ namespace MarvelComicsXF.Models
         public string Name { get; set; }
         public string Role { get; set; }
     }
+    //public class Url
+    //{
+    //    public string Type { get; set; }
+    //    public string URL { get; set; }
+    //}
 
-    public class StoryList
-    {
-        public int Available { get; set; }
-        public int Returned { get; set; }
-        public string CollectionURI { get; set; }
-        public StorySummary[] Items { get; set; }
-    }
+    //public class Image
+    //{
+    //    public string Path { get; set; }
+    //    public string Extension { get; set; }
+    //}
+    //public class ComicSummary
+    //{
+    //    public string ResourceURI { get; set; }
+    //    public string Name { get; set; }
+    //}
 
-    public class StorySummary
-    {
-        public string ResourceURI { get; set; }
-        public string Name { get; set; }
-        public string Type { get; set; }
-    }
+    //public class StoryList
+    //{
+    //    public int Available { get; set; }
+    //    public int Returned { get; set; }
+    //    public string CollectionURI { get; set; }
+    //    public StorySummary[] Items { get; set; }
+    //}
+    //public class StorySummary
+    //{
+    //    public string ResourceURI { get; set; }
+    //    public string Name { get; set; }
+    //    public string Type { get; set; }
+    //}
 
-    public class EventList
-    {
-        public int Available { get; set; }
-        public int Returned { get; set; }
-        public string CollectionURI { get; set; }
-        public EventSummary[] Items { get; set; }
-    }
-
-    public class EventSummary
-    {
-        public string ResourceURI { get; set; }
-        public string Name { get; set; }
-    }
-
+    //public class EventList
+    //{
+    //    public int Available { get; set; }
+    //    public int Returned { get; set; }
+    //    public string CollectionURI { get; set; }
+    //    public EventSummary[] Items { get; set; }
+    //}
+    //public class EventSummary
+    //{
+    //    public string ResourceURI { get; set; }
+    //    public string Name { get; set; }
+    //}
+    //public class SeriesSummary
+    //{
+    //    public string ResourceURI { get; set; }
+    //    public string Name { get; set; }
+    //}
 }

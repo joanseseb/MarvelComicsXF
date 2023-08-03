@@ -1,14 +1,32 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <Application xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:converters="clr-namespace:MarvelComicsXF.Converters"
              x:Class="MarvelComicsXF.App">
     <Application.Resources>
         <ResourceDictionary>
+            <Color x:Key="primaryColor">#3F51B5</Color>
+            <Color x:Key="secondaryColor">#303F9F</Color>
+            <Color x:Key="primaryTextColor">White</Color>
+            <Color x:Key="secondaryTextColor">DarkGray</Color>
+            
+            <Style TargetType="NavigationPage">
+                <Setter Property="BarBackgroundColor"
+                        Value="{StaticResource primaryColor}" />
+                <Setter Property="BarTextColor"
+                        Value="White" />
+            </Style>
+            
+            
             <OnPlatform x:Key="MaterialIcon"
                         x:TypeArguments="x:String">
                 <On Platform="Android"
                     Value="MaterialIconsRegular.ttf#Material Icons" />
             </OnPlatform>
+
+            <converters:ThumbnailToImageSourceConverter x:Key="ThumbnailToImageSourceConverter" />
+            <converters:IndexValueConverter x:Key="IndexConverter" />
+
         </ResourceDictionary>
 
     </Application.Resources>

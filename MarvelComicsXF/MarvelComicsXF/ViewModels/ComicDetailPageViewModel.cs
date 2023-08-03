@@ -1,9 +1,9 @@
 ﻿using MarvelComicsXF.Models;
+using MarvelComicsXF.Services;
 using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Text;
+using System.Threading.Tasks;
 using System.Windows.Input;
+using Xamarin.CommunityToolkit.ObjectModel;
 using Xamarin.Forms;
 
 namespace MarvelComicsXF.ViewModels
@@ -12,7 +12,9 @@ namespace MarvelComicsXF.ViewModels
     {
         public ComicDetailPageViewModel()
         {
-            //this.PageAppearingCommand = new Command(async () => await LoadComicsAsync());
+            ListOfCharacters = new ObservableRangeCollection<Character>();
+
+            this.PageAppearingCommand = new Command(async () => await LoadDataAsync());
             //this.PageDisappearingCommand = new Command(async () => await LoadCharactersAsync());
 
         }
@@ -38,6 +40,57 @@ namespace MarvelComicsXF.ViewModels
             }
         }
 
+        private ObservableRangeCollection<Character> listOfCharacters;
+        public ObservableRangeCollection<Character> ListOfCharacters
+        {
+            get => listOfCharacters;
+            set
+            {
+                if (listOfCharacters != value)
+                {
+                    listOfCharacters = value;
+                    OnPropertyChanged(nameof(ListOfCharacters));
+                }
+            }
+        }
+
         #endregion
+
+        public async Task LoadDataAsync()
+        {
+            try
+            {
+                if (IsBusy)
+                    return;
+
+                IsBusy = true;
+
+                await LoadCharactersAsync();
+
+                IsBusy = false;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
+        public async Task LoadCharactersAsync()
+        {
+            try
+            {
+
+                var apiService = new MarvelApiService();
+                var result = await apiService.GetCharactersAsync(SelectedComic.Characters.CollectionURI);
+                if (result.Results != null)
+                    ListOfCharacters.AddRange(result.Results);
+
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
     }
 }

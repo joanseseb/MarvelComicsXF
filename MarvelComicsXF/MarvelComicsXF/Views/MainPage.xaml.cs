@@ -1,4 +1,5 @@
-﻿using Xamarin.Forms;
+﻿using System.Threading.Tasks;
+using Xamarin.Forms;
 
 
 namespace MarvelComicsXF.Views
@@ -23,6 +24,16 @@ namespace MarvelComicsXF.Views
                 searchBar.Focus();
             }
 
+        }
+        private void SearchAgainTapped(object sender, System.EventArgs e)
+        {
+            var searchBar = (SearchBar)this.FindByName("SearchBar");
+            if (searchBar.IsVisible)
+            {
+                //searchBar.Text = string.Empty;
+                searchBar.Focus();
+
+            }
         }
     }
 }

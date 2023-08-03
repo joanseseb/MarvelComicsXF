@@ -1,7 +1,4 @@
 ﻿using MarvelComicsXF.Models;
-using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace MarvelComicsXF.Services
@@ -12,6 +9,7 @@ namespace MarvelComicsXF.Services
         Task<ComicDataContainer> GetMoreComicsAsync(int offset);
         Task<ComicDataContainer> GetComicsByTitleAsync(string searchText);
         Task<ComicDataContainer> GetMoreComicsByTitleAsync(int offset, string searchText);
+        Task<CharacterDataContainer> GetCharactersAsync(string url);
     }
 }
 
