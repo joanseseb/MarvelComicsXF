@@ -1,6 +1,6 @@
 namespace NUnitTest
 {
-    public class Tests
+    public class MainPage
     {
         [SetUp]
         public void Setup()
