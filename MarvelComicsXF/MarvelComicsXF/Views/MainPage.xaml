@@ -87,7 +87,7 @@
         </Grid>
 
         <Label Grid.Row="1"
-               Text="{Binding NumberOfCallsToGetComicsAsync}" />
+               Text="{Binding NumberOfCallsToGetComicsAsync, StringFormat='API calls: {0}'}" />
 
         <RefreshView Grid.Row="2"
                      IsRefreshing="{Binding IsRefreshing}"

@@ -125,6 +125,7 @@ namespace MarvelComicsXF.ViewModels
         {
             try
             {
+                IsRefreshing = true;
                 if (IsBusy || !string.IsNullOrEmpty(SearchText))
                     return;
                 IsBusy = true;
@@ -137,6 +138,7 @@ namespace MarvelComicsXF.ViewModels
                 CheckIfMoreData(result);
 
                 IsBusy = false;
+                IsRefreshing = false;
             }
             catch (Exception ex)
             {
