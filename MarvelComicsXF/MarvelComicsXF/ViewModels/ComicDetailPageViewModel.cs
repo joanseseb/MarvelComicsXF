@@ -1,6 +1,8 @@
 ﻿using MarvelComicsXF.Models;
-using MarvelComicsXF.Services;
+using MarvelComicsXF.Services.Api;
+using MarvelComicsXF.Services.Navigation;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Xamarin.CommunityToolkit.ObjectModel;
@@ -10,8 +12,11 @@ namespace MarvelComicsXF.ViewModels
 {
     public class ComicDetailPageViewModel : BaseViewModel
     {
-        public ComicDetailPageViewModel()
+        public ComicDetailPageViewModel(INavigationService navigationService, IMarvelApiService marvelApiService) : base(navigationService, marvelApiService)
         {
+            _navigationService = navigationService;
+            _marvelApiService = marvelApiService;
+
             ListOfCharacters = new ObservableRangeCollection<Character>();
 
             this.PageAppearingCommand = new Command(async () => await LoadDataAsync());
@@ -56,6 +61,15 @@ namespace MarvelComicsXF.ViewModels
 
         #endregion
 
+        public override void Initialize(IDictionary<string, object> parameters)
+        {
+            base.Initialize(parameters);
+            if(parameters.TryGetValue("SelectedItem", out var comic))
+            {
+                SelectedComic = (Comic)comic;
+            }
+        }
+
         public async Task LoadDataAsync()
         {
             try
@@ -80,12 +94,9 @@ namespace MarvelComicsXF.ViewModels
         {
             try
             {
-
-                var apiService = new MarvelApiService();
-                var result = await apiService.GetCharactersAsync(SelectedComic.Characters.CollectionURI);
+                var result = await _marvelApiService.GetCharactersAsync(SelectedComic.Characters.CollectionURI);
                 if (result.Results != null)
                     ListOfCharacters.AddRange(result.Results);
-
             }
             catch (Exception)
             {

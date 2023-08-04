@@ -1,8 +1,9 @@
 ﻿using MarvelComicsXF.Models;
-using MarvelComicsXF.Services;
+using MarvelComicsXF.Services.Api;
+using MarvelComicsXF.Services.Navigation;
 using MarvelComicsXF.Views;
 using System;
-using System.Collections.ObjectModel;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Xamarin.CommunityToolkit.ObjectModel;
@@ -15,8 +16,12 @@ namespace MarvelComicsXF.ViewModels
         private int currentOffSet = 0;
         private bool moreData;
 
-        public MainPageViewModel()
+        public MainPageViewModel(INavigationService navigationService, IMarvelApiService marvelApiService) : base(navigationService, marvelApiService)
         {
+            _navigationService = navigationService;
+            _marvelApiService = marvelApiService;
+
+
             this.ListOfComics = new ObservableRangeCollection<Comic>();
             this.NumberOfCallsToGetComicsAsync = 0;
 
@@ -27,7 +32,6 @@ namespace MarvelComicsXF.ViewModels
             this.ItemTappedCommand = new Command<Comic>((selectedItem) => ItemTappedCommandExecuted(selectedItem));
             this.RefreshCommand = new Command(async async => await RefreshDataAsync());
             this.RestartSearchCommand = new Command(() => RestartSearchCommandExecuted());
-
         }
 
 
@@ -99,8 +103,7 @@ namespace MarvelComicsXF.ViewModels
 
                 ListOfComics = new ObservableRangeCollection<Comic>();
                 this.SearchText = string.Empty;
-                var apiService = new MarvelApiService();
-                var result = await apiService.GetComicsAsync();
+                var result = await _marvelApiService.GetComicsAsync();
                 ListOfComics.AddRange(result.Results);
                 originalListOfComics = ListOfComics;
 
@@ -124,18 +127,15 @@ namespace MarvelComicsXF.ViewModels
             {
                 if (IsBusy || !string.IsNullOrEmpty(SearchText))
                     return;
-                IsRefreshing = true;
                 IsBusy = true;
 
-                var apiService = new MarvelApiService();
-                var result = await apiService.GetComicsAsync();
+                var result = await _marvelApiService.GetComicsAsync();
                 ListOfComics.AddRange(result.Results);
                 originalListOfComics = ListOfComics;
 
                 NumberOfCallsToGetComicsAsync += 1;
                 CheckIfMoreData(result);
 
-                IsRefreshing = false;
                 IsBusy = false;
             }
             catch (Exception ex)
@@ -152,13 +152,12 @@ namespace MarvelComicsXF.ViewModels
 
                 IsBusy = true;
 
-                var apiService = new MarvelApiService();
                 if (string.IsNullOrEmpty(searchText))
                 {
                     if (moreData)
                     {
                         currentOffSet += 20;
-                        var result = await apiService.GetMoreComicsAsync(offset);
+                        var result = await _marvelApiService.GetMoreComicsAsync(offset);
                         ListOfComics.AddRange(result.Results);
                         originalListOfComics = ListOfComics;
 
@@ -176,7 +175,7 @@ namespace MarvelComicsXF.ViewModels
                     if (moreData)
                     {
                         currentOffSet += 20;
-                        var result = await apiService.GetMoreComicsByTitleAsync(offset, searchText);
+                        var result = await _marvelApiService.GetMoreComicsByTitleAsync(offset, searchText);
                         foreach (var item in result.Results)
                         {
                             ListOfComics.Add(item);
@@ -207,8 +206,8 @@ namespace MarvelComicsXF.ViewModels
                 IsBusy = true;
 
                 currentOffSet = 20;
-                var apiService = new MarvelApiService();
-                var result = await apiService.GetComicsByTitleAsync(searchText);
+
+                var result = await _marvelApiService.GetComicsByTitleAsync(searchText);
                 ListOfComics = new ObservableRangeCollection<Comic>();
                 ListOfComics.AddRange(result.Results);
 
@@ -251,11 +250,8 @@ namespace MarvelComicsXF.ViewModels
             {
                 throw new ArgumentNullException(nameof(selectedItem));
             }
-
-            await App.Current.MainPage.Navigation.PushAsync(new ComicDetailPage
-            {
-                BindingContext = new ComicDetailPageViewModel { SelectedComic = selectedItem }
-            });
+            var parameters = new Dictionary<string, object> { { "SelectedItem", selectedItem } };
+            await _navigationService.NavigateToPageAsync("ComicDetailPage", parameters);
         }
         #endregion
     }

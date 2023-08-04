@@ -1,15 +1,13 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:viewmodels="clr-namespace:MarvelComicsXF.ViewModels"
              xmlns:xct="http://xamarin.com/schemas/2020/toolkit"
              xmlns:controls="clr-namespace:MarvelComicsXF.Controls"
+             xmlns:viewmodels="clr-namespace:MarvelComicsXF.ViewModels"
+             xmlns:models="clr-namespace:MarvelComicsXF.Models"
+             x:DataType="viewmodels:MainPageViewModel"
              x:Class="MarvelComicsXF.Views.MainPage"
              NavigationPage.HasNavigationBar="False">
-
-    <ContentPage.BindingContext>
-        <viewmodels:MainPageViewModel />
-    </ContentPage.BindingContext>
 
     <ContentPage.Behaviors>
         <xct:EventToCommandBehavior EventName="Appearing"
@@ -100,9 +98,9 @@
                             RemainingItemsThresholdReachedCommand="{Binding RemainingItemsThresholdReachedCommand}"
                             EmptyView=""
                             SelectionMode="None"
-                            IsVisible="{Binding IsBusy, Converter={xct:InvertedBoolConverter}}">
+                            IsVisible="{Binding IsRefreshing, Converter={xct:InvertedBoolConverter}}">
                 <CollectionView.ItemTemplate>
-                    <DataTemplate>
+                    <DataTemplate x:DataType="models:Comic">
                         <Frame Padding="1"
                                Margin="0"
                                BorderColor="LightGray"

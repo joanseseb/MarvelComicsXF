@@ -1,14 +1,11 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:viewmodels="clr-namespace:MarvelComicsXF.ViewModels"
              xmlns:xct="http://xamarin.com/schemas/2020/toolkit"
+             xmlns:viewmodels="clr-namespace:MarvelComicsXF.ViewModels"
+             xmlns:models="clr-namespace:MarvelComicsXF.Models"
+             x:DataType="viewmodels:ComicDetailPageViewModel"
              x:Class="MarvelComicsXF.Views.ComicDetailPage">
-
-    <ContentPage.BindingContext>
-        <viewmodels:ComicDetailPageViewModel />
-    </ContentPage.BindingContext>
-
 
     <ContentPage.Behaviors>
         <xct:EventToCommandBehavior EventName="Appearing"
@@ -84,7 +81,7 @@
                 <Frame Grid.Row="3"
                        BackgroundColor="{StaticResource primaryColor}"
                        BorderColor="Black"
-                       IsVisible="{Binding ListOfCharacters, Converter={xct:ListIsNotNullOrEmptyConverter}}"
+                       IsVisible="{Binding SelectedComic.Characters.Items, Converter={xct:ListIsNotNullOrEmptyConverter}}"
                        CornerRadius="0"
                        Margin="0"
                        Padding="1"
@@ -98,14 +95,14 @@
                               x:Name="CharacterCarouselView"
                               Margin="10"
                               ItemsSource="{Binding ListOfCharacters}"
-                              IsVisible="{Binding ListOfCharacters, Converter={xct:ListIsNotNullOrEmptyConverter}}"
+                              IsVisible="{Binding SelectedComic.Characters.Items, Converter={xct:ListIsNotNullOrEmptyConverter}}"
                               BackgroundColor="Transparent"
                               Loop="True"
                               Scrolled="CharacterCarouselView_Scrolled"
                               HeightRequest="200"
                               PositionChanged="CharacterCarouselView_PositionChanged">
                     <CarouselView.ItemTemplate>
-                        <DataTemplate>
+                        <DataTemplate x:DataType="models:Character">
                             <Grid>
                                 <Grid.RowDefinitions>
                                     <RowDefinition Height="*" />
@@ -150,7 +147,7 @@
                             AlignItems="Start"
                             JustifyContent="SpaceEvenly">
                     <BindableLayout.ItemTemplate>
-                        <DataTemplate>
+                        <DataTemplate x:DataType="models:CreatorSummary">
                             <StackLayout Margin="10"
                                          WidthRequest="150"
                                          Spacing="0">

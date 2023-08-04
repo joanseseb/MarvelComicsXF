@@ -4,7 +4,7 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using MarvelComicsXF.Models;
 
-namespace MarvelComicsXF.Services
+namespace MarvelComicsXF.Services.Api
 {
     public class MarvelApiService : IMarvelApiService
     {

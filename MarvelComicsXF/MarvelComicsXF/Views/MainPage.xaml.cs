@@ -1,4 +1,6 @@
-﻿using System.Threading.Tasks;
+﻿using MarvelComicsXF.Services.Navigation;
+using MarvelComicsXF.ViewModels;
+using System.Threading.Tasks;
 using Xamarin.Forms;
 
 
@@ -6,9 +8,11 @@ namespace MarvelComicsXF.Views
 {
     public partial class MainPage : ContentPage
     {
+
         public MainPage()
         {
             InitializeComponent();
+            BindingContext = App.GetViewModel<MainPageViewModel>();
         }
 
         private void SearchIcon_Tapped(object sender, System.EventArgs e)

@@ -1,7 +1,7 @@
 ﻿using MarvelComicsXF.Models;
 using System.Threading.Tasks;
 
-namespace MarvelComicsXF.Services
+namespace MarvelComicsXF.Services.Api
 {
     public interface IMarvelApiService
     {

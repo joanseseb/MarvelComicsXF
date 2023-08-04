@@ -1,4 +1,6 @@
-﻿using System;
+﻿using MarvelComicsXF.Services.Api;
+using MarvelComicsXF.Services.Navigation;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Text;
@@ -11,6 +13,18 @@ namespace MarvelComicsXF.ViewModels
         protected virtual void OnPropertyChanged(string propertyName)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+
+        protected INavigationService _navigationService;
+        protected IMarvelApiService _marvelApiService;
+        protected BaseViewModel(INavigationService navigationService, IMarvelApiService marvelApiService)
+        {
+            _navigationService = navigationService;
+            _marvelApiService = marvelApiService;
+        }
+
+        public virtual void Initialize(IDictionary<string, object> parameters)
+        {
         }
 
 

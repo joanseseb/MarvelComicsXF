@@ -1,4 +1,5 @@
-﻿using MarvelComicsXF.ViewModels;
+﻿using MarvelComicsXF.Services.Navigation;
+using MarvelComicsXF.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,7 +21,7 @@ namespace MarvelComicsXF.Views
         public ComicDetailPage()
         {
             InitializeComponent();
-
+            BindingContext = App.GetViewModel<ComicDetailPageViewModel>();
         }
         protected override void OnAppearing()
         {
